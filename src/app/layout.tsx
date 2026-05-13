@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 
@@ -17,26 +18,27 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <head>
-        {/*
-          네이버 지도 SDK 로딩 — 순수 <script> 태그 사용.
-          Next.js <Script> 컴포넌트는 동적 DOM 삽입 방식이라 Referer 헤더가
-          누락/변경되어 네이버 인증 200(Authentication Failed) 이 발생함.
-          정적 script 태그(테스트 HTML 동작 방식)로 처리해야 인증 통과.
-        */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.__naverReady = function() {
-                window.__naverMapsLoaded = true;
-                window.dispatchEvent(new Event('naverReady'));
-              };
-            `,
-          }}
-        />
-        <script src={naverMapSrc} async />
-      </head>
       <body className="min-h-screen bg-slate-50">
+        {/*
+          네이버 지도 SDK 로딩.
+          strategy="beforeInteractive" 는 SSR 시점에 <head>로 인라인되어
+          정적 <script> 태그처럼 동작 → Referer 정상 전송 + hydration 오류 없음.
+        */}
+        <Script
+          id="naver-callback"
+          strategy="beforeInteractive"
+        >
+          {`window.__naverReady = function() {
+              window.__naverMapsLoaded = true;
+              window.dispatchEvent(new Event('naverReady'));
+            };`}
+        </Script>
+        <Script
+          id="naver-maps-sdk"
+          src={naverMapSrc}
+          strategy="beforeInteractive"
+        />
+
         <Header />
         <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
       </body>
