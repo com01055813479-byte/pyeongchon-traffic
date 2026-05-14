@@ -64,7 +64,12 @@ export function loadNaverMaps(clientId: string): Promise<NaverNamespace> {
 
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
-    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${encodeURIComponent(clientId)}&submodules=geocoder`;
+    // NCP 는 2024 년부터 ncpKeyId 를 권장하지만 ncpClientId 도 호환 — 둘 다 보냄
+    script.src =
+      `https://oapi.map.naver.com/openapi/v3/maps.js` +
+      `?ncpKeyId=${encodeURIComponent(clientId)}` +
+      `&ncpClientId=${encodeURIComponent(clientId)}` +
+      `&submodules=geocoder`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
