@@ -91,7 +91,10 @@ export default function HomePage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <LocationTracker onLocation={setUserLocation} />
-          <TravelTimeEstimate userLocation={userLocation} />
+          <TravelTimeEstimate
+            userLocation={userLocation}
+            onOverrideLocation={(loc) => setUserLocation(loc)}
+          />
         </CardContent>
       </Card>
 

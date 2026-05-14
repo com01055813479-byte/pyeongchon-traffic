@@ -7,10 +7,11 @@ import type { UserLocation, TravelTimeResult } from "@/lib/types";
 import { AREAS } from "@/lib/constants/areas";
 import { formatDistance, formatDuration } from "@/lib/utils/formatters";
 import { Button } from "@/components/ui/Button";
-import type { MapMarker } from "./OpenMap";
+import type { MapMarker } from "./NaverMap";
+import { AddressSearch } from "./AddressSearch";
 
-const OpenMap = dynamic(
-  () => import("./OpenMap").then(m => m.OpenMap),
+const NaverMap = dynamic(
+  () => import("./NaverMap").then(m => m.NaverMap),
   {
     ssr: false,
     loading: () => (
@@ -30,11 +31,13 @@ const OpenMap = dynamic(
 
 interface Props {
   userLocation: UserLocation | null;
+  /** GPS 외에 위치 검색 결과로도 출발지를 덮어쓸 수 있도록 */
+  onOverrideLocation?: (loc: UserLocation, label: string) => void;
 }
 
 const DEFAULT_CENTER = { lat: 37.3908, lng: 126.9488 };
 
-export function TravelTimeEstimate({ userLocation }: Props) {
+export function TravelTimeEstimate({ userLocation, onOverrideLocation }: Props) {
   const [selectedAreaId, setSelectedAreaId] = useState(AREAS[0].id);
   const [result, setResult]   = useState<TravelTimeResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -99,13 +102,24 @@ export function TravelTimeEstimate({ userLocation }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <OpenMap
+      <NaverMap
         center={mapCenter}
         zoom={userLocation ? 13 : 15}
         markers={markers}
         routePath={routePath}
         height="280px"
       />
+
+      {/* 주소·장소명으로 출발지 검색 */}
+      {onOverrideLocation && (
+        <AddressSearch
+          onSelect={(loc, label) => {
+            onOverrideLocation(loc, label);
+            setResult(null);
+            setRoutePath([]);
+          }}
+        />
+      )}
 
       {/* 목적지 선택 + 계산 버튼 */}
       <div className="flex gap-2 items-end flex-wrap">

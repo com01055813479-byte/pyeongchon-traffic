@@ -3,12 +3,16 @@ import { NextResponse } from "next/server";
 /**
  * GET /api/directions?startLat=&startLng=&goalLat=&goalLng=
  *
- * OSRM(Open Source Routing Machine) 공개 데모 서버를 통해 차량 경로를 조회합니다.
- * API 키 / 도메인 등록 불필요 → 즉시 사용 가능.
+ * 네이버 Cloud Platform Directions 5 (driving) API 호출.
+ * - Endpoint: https://maps.apigw.ntruss.com/map-direction/v1/driving
+ * - 요구 헤더: X-NCP-APIGW-API-KEY-ID, X-NCP-APIGW-API-KEY
  *
- * 응답:
+ * 응답 (성공):
  *   { distance: meters, duration: milliseconds, path: [[lng, lat], ...] }
  */
+const CLIENT_ID     = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID ?? "";
+const CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET ?? "";
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
@@ -23,30 +27,45 @@ export async function GET(request: Request) {
       { status: 400 }
     );
   }
+  if (!CLIENT_ID || !CLIENT_SECRET) {
+    return NextResponse.json(
+      { error: "네이버 API 키 환경변수가 설정되지 않았습니다." },
+      { status: 500 }
+    );
+  }
 
-  // OSRM 좌표 순서: 경도,위도 (Naver 와 동일)
+  // 네이버 좌표 순서: 경도,위도
   const start = `${startLng},${startLat}`;
   const goal  = `${goalLng},${goalLat}`;
-
   const apiUrl =
-    `https://router.project-osrm.org/route/v1/driving/${start};${goal}` +
-    `?overview=full&geometries=geojson`;
+    `https://maps.apigw.ntruss.com/map-direction/v1/driving` +
+    `?start=${start}&goal=${goal}&option=trafast`;
 
   try {
-    const res = await fetch(apiUrl, { cache: "no-store" });
+    const res = await fetch(apiUrl, {
+      headers: {
+        "X-NCP-APIGW-API-KEY-ID": CLIENT_ID,
+        "X-NCP-APIGW-API-KEY":    CLIENT_SECRET,
+      },
+      cache: "no-store",
+    });
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("[Directions API] OSRM 응답:", { status: res.status, body: text });
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data || data.code !== 0) {
+      console.error("[Directions API] 네이버 응답 오류:", { status: res.status, data });
       return NextResponse.json(
-        { error: `경로 서비스 오류 (${res.status})`, detail: text },
-        { status: res.status }
+        {
+          error: data?.message ?? `경로 서비스 오류 (${res.status})`,
+          code:  data?.code,
+          detail: data,
+        },
+        { status: res.status === 200 ? 502 : res.status }
       );
     }
 
-    const data = await res.json();
-
-    const route = data?.routes?.[0];
+    // 네이버 응답 구조: route.trafast[0].{ summary, path }
+    const route = data?.route?.trafast?.[0];
     if (!route) {
       return NextResponse.json(
         { error: "경로를 찾을 수 없습니다.", raw: data },
@@ -54,11 +73,10 @@ export async function GET(request: Request) {
       );
     }
 
-    // OSRM 응답: distance(m), duration(seconds), geometry.coordinates([[lng,lat], ...])
     return NextResponse.json({
-      distance: route.distance,                 // 미터
-      duration: Math.round(route.duration * 1000), // 밀리초로 통일 (기존 인터페이스 호환)
-      path: route.geometry?.coordinates ?? [],  // [[lng, lat], ...]
+      distance: route.summary.distance, // 미터
+      duration: route.summary.duration, // 밀리초 (네이버는 ms 단위)
+      path:     route.path,             // [[lng, lat], ...]
     });
   } catch (err) {
     console.error("[Directions API] 네트워크 오류:", err);

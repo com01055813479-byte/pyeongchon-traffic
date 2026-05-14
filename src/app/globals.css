@@ -112,23 +112,6 @@ body {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* ─── Leaflet 다크모드 보정 ────────────────────────────────────────────── */
-.dark .leaflet-tile {
-  filter: brightness(0.85) invert(1) contrast(1.1) hue-rotate(180deg) saturate(0.6);
-}
-.dark .leaflet-control-attribution {
-  background: rgba(31, 31, 36, 0.9) !important;
-  color: var(--text-muted) !important;
-}
-.dark .leaflet-control-attribution a {
-  color: var(--accent-text) !important;
-}
-.dark .leaflet-control-zoom a {
-  background: var(--bg-elev) !important;
-  color: var(--text-strong) !important;
-  border-color: var(--border) !important;
-}
-
 /* ─── 스크롤바 다크모드 ────────────────────────────────────────────────── */
 .dark ::-webkit-scrollbar {
   width: 10px;
