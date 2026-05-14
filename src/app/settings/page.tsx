@@ -23,7 +23,7 @@ import { useSettings, ThemeMode } from "@/lib/context/SettingsContext";
 import { AREAS } from "@/lib/constants/areas";
 import { cn } from "@/lib/utils/cn";
 import { dataStore } from "@/lib/storage";
-import { CLUB_PASSWORD } from "@/lib/constants/auth";
+import { matchGate } from "@/lib/constants/auth";
 
 const THEME_OPTIONS: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
   { value: "light",  label: "라이트", icon: Sun },
@@ -51,8 +51,9 @@ export default function SettingsPage() {
   function handleClubAccess(e: React.FormEvent) {
     e.preventDefault();
     setClubPwError(null);
-    if (clubPwInput === CLUB_PASSWORD) {
-      router.push("/data-input");
+    const rule = matchGate(clubPwInput);
+    if (rule) {
+      router.push(rule.redirectTo);
     } else {
       setClubPwError("비밀번호가 일치하지 않습니다");
     }
