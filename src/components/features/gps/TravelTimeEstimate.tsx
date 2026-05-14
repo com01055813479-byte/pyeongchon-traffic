@@ -1,12 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Navigation, Clock, Route, Loader2, AlertCircle } from "lucide-react";
 import type { UserLocation, TravelTimeResult } from "@/lib/types";
 import { AREAS } from "@/lib/constants/areas";
 import { formatDistance, formatDuration } from "@/lib/utils/formatters";
 import { Button } from "@/components/ui/Button";
-import { NaverMap, MapMarker } from "./NaverMap";
+import type { MapMarker } from "./OpenMap";
+
+// Leaflet 은 window 객체를 사용하므로 SSR 비활성화 + 클라이언트 전용 로딩
+const OpenMap = dynamic(
+  () => import("./OpenMap").then(m => m.OpenMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full rounded-xl bg-gray-100 flex items-center justify-center text-sm text-gray-400" style={{ height: 300 }}>
+        지도 불러오는 중...
+      </div>
+    ),
+  }
+);
 
 interface Props {
   userLocation: UserLocation | null;
@@ -85,8 +99,8 @@ export function TravelTimeEstimate({ userLocation }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* 네이버 지도 */}
-      <NaverMap
+      {/* OpenStreetMap (Leaflet) */}
+      <OpenMap
         center={mapCenter}
         zoom={userLocation ? 13 : 15}
         markers={markers}
@@ -144,7 +158,7 @@ export function TravelTimeEstimate({ userLocation }: Props) {
             <p className="font-medium">경로 계산 실패</p>
             <p className="text-xs mt-0.5 text-red-500">{error}</p>
             <p className="text-xs mt-1 text-red-400">
-              네이버 클라우드 콘솔에서 &apos;localhost&apos; 도메인이 등록되어 있는지 확인해 주세요.
+              경로 서비스가 일시적으로 불안정할 수 있습니다. 잠시 후 다시 시도해 주세요.
             </p>
           </div>
         </div>
