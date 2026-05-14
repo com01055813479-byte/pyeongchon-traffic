@@ -11,7 +11,10 @@ import {
 
 function getNaver(): NaverNamespace | null {
   if (typeof window === "undefined") return null;
-  return (window as unknown as { naver?: NaverNamespace }).naver ?? null;
+  const nm = (window as unknown as { naver?: NaverNamespace }).naver;
+  // 인증 실패 시 naver 는 존재해도 naver.maps 가 비어 있을 수 있음
+  if (!nm?.maps?.LatLngBounds || !nm?.maps?.Marker || !nm?.maps?.LatLng) return null;
+  return nm;
 }
 
 export interface MapMarker {
@@ -52,6 +55,17 @@ export function NaverMap({
       return;
     }
     let canceled = false;
+
+    // 네이버 SDK 가 호출하는 전역 인증 실패 콜백 — 화면에 즉시 반영
+    (window as unknown as { navermap_authFailure?: () => void }).navermap_authFailure = () => {
+      if (!canceled) {
+        setError(
+          "네이버 지도 인증이 실패했습니다. NCP 콘솔의 'Web 서비스 URL'에 " +
+          "https://pyeongchon-traffic.vercel.app 가 등록되어 있는지 확인해 주세요."
+        );
+        setReady(false);
+      }
+    };
 
     loadNaverMaps(CLIENT_ID)
       .then((nm) => {
