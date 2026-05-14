@@ -32,7 +32,7 @@ interface Props {
   userLocation: UserLocation | null;
 }
 
-const DEFAULT_CENTER = { lat: 37.3897, lng: 126.9519 };
+const DEFAULT_CENTER = { lat: 37.3908, lng: 126.9488 };
 
 export function TravelTimeEstimate({ userLocation }: Props) {
   const [selectedAreaId, setSelectedAreaId] = useState(AREAS[0].id);

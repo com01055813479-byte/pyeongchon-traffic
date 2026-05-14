@@ -61,7 +61,7 @@ export function CongestionChart({ recommendations, filter }: Props) {
                 className={cn(
                   "w-7 rounded-t-md transition-all duration-300",
                   scoreToBarColor(rec.score.score),
-                  rec.isRecommended ? "ring-2 ring-offset-1 ring-emerald-400" : ""
+                  rec.isRecommended ? "ring-2 ring-emerald-400" : ""
                 )}
                 style={{ height: `${barH}px` }}
               />
