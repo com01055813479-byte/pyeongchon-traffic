@@ -6,13 +6,11 @@ interface CardProps {
 }
 
 /**
- * Glass Morphism 카드.
- * 반투명 배경 + 백드롭 블러 + 미세한 보더.
- * .glass 클래스는 globals.css 에서 라이트/다크 모드를 자동 처리.
+ * Toss 스타일 카드 — 깨끗한 단색 배경, 1px 보더, 미세한 그림자.
  */
 export function Card({ children, className }: CardProps) {
   return (
-    <div className={cn("glass rounded-2xl p-5", className)}>
+    <div className={cn("card rounded-2xl p-5", className)}>
       {children}
     </div>
   );
@@ -24,7 +22,10 @@ export function CardHeader({ children, className }: CardProps) {
 
 export function CardTitle({ children, className }: CardProps) {
   return (
-    <h3 className={cn("text-base font-semibold text-slate-900 dark:text-slate-100", className)}>
+    <h3
+      className={cn("text-base font-bold", className)}
+      style={{ color: "var(--text-strong)" }}
+    >
       {children}
     </h3>
   );

@@ -1,110 +1,146 @@
 @import "tailwindcss";
 
-/* ─── Tailwind v4: 다크모드 토글을 위한 커스텀 variant ────────────────────── */
+/* ─── Tailwind v4: 다크모드 토글 ────────────────────────────────────────── */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ─── 디자인 토큰 (Light/Dark 모두 정의) ───────────────────────────────────── */
+/* ─── Toss 스타일 디자인 토큰 ──────────────────────────────────────────────
+   원칙:
+   - 깨끗한 단색 배경 (그라데이션 X)
+   - 명확한 텍스트 위계 (strong / base / muted / disabled)
+   - 미세한 그림자 + 1px 보더
+   - 한 가지 강조색(파랑)만 사용
+ */
 :root {
-  /* 배경 그라데이션 (라이트) */
-  --bg-from: #eef2ff;   /* indigo-50 */
-  --bg-via:  #faf5ff;   /* purple-50 */
-  --bg-to:   #fef2f2;   /* rose-50 */
+  /* 배경 */
+  --bg:        #f9fafb;  /* 페이지 */
+  --bg-elev:   #ffffff;  /* 카드 */
+  --bg-soft:   #f1f3f5;  /* 인풋, 옅은 영역 */
 
-  /* 글래스 카드 */
-  --glass-bg:     rgba(255, 255, 255, 0.55);
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  /* 보더 */
+  --border:        #e5e8eb;
+  --border-strong: #d1d6db;
 
   /* 텍스트 */
-  --text-strong: #0f172a;
-  --text-base:   #334155;
-  --text-muted:  #64748b;
+  --text-strong: #191f28;   /* 제목 */
+  --text-base:   #4e5968;   /* 본문 */
+  --text-muted:  #8b95a1;   /* 보조 */
+  --text-faint:  #b0b8c1;   /* placeholder */
+
+  /* 강조색 — Toss 블루 */
+  --accent:        #3182f6;
+  --accent-hover:  #1b64da;
+  --accent-soft:   #e8f3ff;
+  --accent-text:   #1b64da;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow:    0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
 }
 
 .dark {
-  /* 배경 그라데이션 (다크) */
-  --bg-from: #020617;   /* slate-950 */
-  --bg-via:  #1e1b4b;   /* indigo-950 */
-  --bg-to:   #3b0764;   /* purple-950 */
+  /* 배경 — 푸른 끼 없는 중성 어둠 */
+  --bg:        #17171c;
+  --bg-elev:   #1f1f24;
+  --bg-soft:   #2a2a30;
 
-  /* 글래스 카드 */
-  --glass-bg:     rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  /* 보더 */
+  --border:        #2c2c33;
+  --border-strong: #3a3a42;
 
   /* 텍스트 */
-  --text-strong: #f1f5f9;
-  --text-base:   #cbd5e1;
-  --text-muted:  #94a3b8;
+  --text-strong: #f4f5f7;
+  --text-base:   #c9cdd2;
+  --text-muted:  #8b95a1;
+  --text-faint:  #5d6571;
+
+  /* 강조색 — 다크에서도 동일한 블루 (살짝 밝게) */
+  --accent:        #4d8bff;
+  --accent-hover:  #6ba0ff;
+  --accent-soft:   rgba(77, 139, 255, 0.12);
+  --accent-text:   #6ba0ff;
+
+  /* 그림자 — 다크에서는 거의 안 보이게 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow:    0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 12px 0 rgba(0, 0, 0, 0.5);
 }
 
 body {
-  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-via) 50%, var(--bg-to) 100%);
-  background-attachment: fixed;
+  background-color: var(--bg);
   color: var(--text-base);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", sans-serif;
+  font-family:
+    "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Segoe UI", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-}
-
-/* 데코레이션 — 좌상/우하에 흐릿한 컬러 블롭 */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  filter: blur(120px);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-}
-body::before {
-  top: -200px;
-  left: -200px;
-  background: #60a5fa; /* blue-400 */
-}
-body::after {
-  bottom: -200px;
-  right: -200px;
-  background: #c084fc; /* purple-400 */
-}
-.dark body::before {
-  background: #1d4ed8; /* blue-700 */
-  opacity: 0.4;
-}
-.dark body::after {
-  background: #7c3aed; /* violet-600 */
-  opacity: 0.4;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* ─── 글래스 카드 공통 클래스 ─────────────────────────────────────────────── */
-.glass {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+/* ─── 토스 스타일 카드 클래스 ───────────────────────────────────────────── */
+.card {
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
-.glass-strong {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(30px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
+.card-elev {
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
-/* Leaflet 컨트롤 다크모드 보정 */
-.dark .leaflet-control-attribution,
-.dark .leaflet-control-zoom a {
-  background: rgba(15, 23, 42, 0.85) !important;
-  color: #e2e8f0 !important;
+/* ─── 토스 스타일 인풋 클래스 ───────────────────────────────────────────── */
+.input {
+  background-color: var(--bg-soft);
+  border: 1px solid transparent;
+  color: var(--text-strong);
+  transition: all 0.15s ease;
+}
+.input:hover {
+  background-color: var(--bg-soft);
+  border-color: var(--border);
+}
+.input:focus {
+  background-color: var(--bg-elev);
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ─── Leaflet 다크모드 보정 ────────────────────────────────────────────── */
+.dark .leaflet-tile {
+  filter: brightness(0.85) invert(1) contrast(1.1) hue-rotate(180deg) saturate(0.6);
+}
+.dark .leaflet-control-attribution {
+  background: rgba(31, 31, 36, 0.9) !important;
+  color: var(--text-muted) !important;
+}
+.dark .leaflet-control-attribution a {
+  color: var(--accent-text) !important;
 }
 .dark .leaflet-control-zoom a {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: var(--bg-elev) !important;
+  color: var(--text-strong) !important;
+  border-color: var(--border) !important;
+}
+
+/* ─── 스크롤바 다크모드 ────────────────────────────────────────────────── */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 5px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }

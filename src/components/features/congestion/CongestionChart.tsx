@@ -19,7 +19,7 @@ export function CongestionChart({ recommendations, filter }: Props) {
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm">
+      <div className="text-center py-10 text-[var(--text-muted)] text-sm">
         해당 시간대 데이터가 없습니다.
       </div>
     );
@@ -53,7 +53,7 @@ export function CongestionChart({ recommendations, filter }: Props) {
               </div>
 
               {/* 시간 레이블 */}
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 rotate-45 origin-left whitespace-nowrap">
+              <span className="text-[10px] text-[var(--text-muted)] rotate-45 origin-left whitespace-nowrap">
                 {rec.timeSlot.start}
               </span>
             </div>
@@ -62,7 +62,7 @@ export function CongestionChart({ recommendations, filter }: Props) {
       </div>
 
       {/* 범례 */}
-      <div className="flex flex-wrap gap-3 mt-4 text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex flex-wrap gap-3 mt-4 text-xs text-[var(--text-muted)]">
         <LegendItem color="bg-green-500" label="원활 (0~30)" />
         <LegendItem color="bg-yellow-500" label="보통 (31~55)" />
         <LegendItem color="bg-orange-500" label="혼잡 (56~75)" />

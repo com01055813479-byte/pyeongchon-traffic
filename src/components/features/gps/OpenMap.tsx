@@ -125,8 +125,11 @@ export function OpenMap({
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-2xl overflow-hidden border border-white/40 dark:border-white/10 shadow-lg shadow-blue-500/10"
-      style={{ height }}
+      className="relative w-full rounded-2xl overflow-hidden"
+      style={{
+        height,
+        border: "1px solid var(--border)",
+      }}
     />
   );
 }

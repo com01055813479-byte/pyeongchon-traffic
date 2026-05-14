@@ -3,18 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
-  Car,
   ClipboardList,
   BarChart3,
   MapPin,
-  ArrowRight,
+  ChevronRight,
   AlertCircle,
   CalendarDays,
   Star,
   Settings,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { DashboardSummary } from "@/components/features/recommendation/DashboardSummary";
 import { TodayScheduleCard } from "@/components/features/schedule/TodayScheduleCard";
 import { LocationTracker } from "@/components/features/gps/LocationTracker";
@@ -48,34 +46,10 @@ function calcStats(areaId: string, rushMultiplier: number): DashboardStats {
 }
 
 const FEATURE_CARDS = [
-  {
-    href: "/schedule",
-    icon: CalendarDays,
-    accent: "from-indigo-400 to-violet-600",
-    title: "학원 시간표",
-    desc: "수업 종료 시간 등록 및 픽업 안내",
-  },
-  {
-    href: "/data-input",
-    icon: ClipboardList,
-    accent: "from-blue-400 to-sky-600",
-    title: "현장 조사",
-    desc: "시간대별 차량 수 데이터 입력",
-  },
-  {
-    href: "/analysis",
-    icon: BarChart3,
-    accent: "from-fuchsia-400 to-purple-600",
-    title: "혼잡도 분석",
-    desc: "데이터 기반 차트 시각화",
-  },
-  {
-    href: "/settings",
-    icon: Settings,
-    accent: "from-slate-400 to-slate-700",
-    title: "설정",
-    desc: "테마, 데이터, 가중치 조정",
-  },
+  { href: "/schedule",   icon: CalendarDays,   title: "학원 시간표", desc: "수업 종료 시간 등록" },
+  { href: "/data-input", icon: ClipboardList,  title: "현장 조사",    desc: "차량 수 데이터 입력" },
+  { href: "/analysis",   icon: BarChart3,      title: "혼잡도 분석",  desc: "시간대별 차트" },
+  { href: "/settings",   icon: Settings,       title: "설정",         desc: "테마, 데이터, 가중치" },
 ];
 
 export default function HomePage() {
@@ -94,34 +68,24 @@ export default function HomePage() {
     .map((s) => getSchedulePickupInfo(s, SAMPLE_RECORDS, rushMult));
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 히어로 — 컴팩트 */}
-      <section className="glass rounded-3xl px-6 py-7 overflow-hidden relative">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-400/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-400/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <Car size={18} className="text-white" />
-            </div>
-            <Badge variant="outline" className="text-slate-700 dark:text-slate-200">학교 동아리 프로젝트</Badge>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">
-            평촌학원가 차량 혼잡도 분석
-          </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
-            학원 시간표를 등록하면 수업 종료 시각의 혼잡도를 분석해 최적의 픽업 타이밍을 안내합니다.
-          </p>
-        </div>
+    <div className="flex flex-col gap-5">
+      {/* ─── 인사말 (히어로 대체) ─────────────────────────────────────────── */}
+      <section className="pt-2 pb-1">
+        <p className="text-sm text-[var(--text-muted)] mb-1">오늘 {todayDay}요일</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-strong)] leading-tight">
+          평촌학원가
+          <br />
+          <span className="text-[var(--accent)]">픽업 안내</span>
+        </h1>
       </section>
 
-      {/* 지도 + 위치 — 메인 컨텐츠 */}
-      <Card className="overflow-hidden">
+      {/* ─── 지도 + 위치 — 메인 컨텐츠 ──────────────────────────────────── */}
+      <Card>
         <CardHeader>
           <CardTitle>
             <span className="flex items-center gap-2">
-              <MapPin size={16} className="text-blue-500 dark:text-blue-400" />
-              내 위치 → 학원가 소요 시간
+              <MapPin size={16} className="text-[var(--accent)]" />
+              내 위치 → 학원가
             </span>
           </CardTitle>
         </CardHeader>
@@ -131,31 +95,31 @@ export default function HomePage() {
         </CardContent>
       </Card>
 
-      {/* 통계 */}
-      <DashboardSummary stats={stats} />
-
-      {/* 오늘의 픽업 일정 */}
+      {/* ─── 오늘의 픽업 일정 ────────────────────────────────────────────── */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between flex-wrap gap-2">
             <CardTitle>
               <span className="flex items-center gap-2">
-                <CalendarDays size={16} className="text-indigo-500 dark:text-indigo-300" />
-                오늘({todayDay}요일) 픽업 일정
+                <CalendarDays size={16} className="text-[var(--accent)]" />
+                오늘의 픽업
               </span>
             </CardTitle>
-            <Link href="/schedule" className="text-xs text-blue-500 dark:text-blue-300 hover:underline font-medium">
-              시간표 관리 →
+            <Link
+              href="/schedule"
+              className="text-xs font-semibold text-[var(--accent-text)] hover:underline"
+            >
+              시간표 관리
             </Link>
           </div>
         </CardHeader>
         <CardContent>
           {todayInfos.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">
-              <Star size={28} className="mx-auto mb-2 opacity-40" />
-              <p>오늘({todayDay}) 등록된 학원 일정이 없습니다.</p>
-              <Link href="/schedule" className="text-blue-500 dark:text-blue-300 hover:underline text-xs mt-1 block">
-                시간표 탭에서 학원을 추가해 주세요 →
+            <div className="text-center py-8 text-[var(--text-muted)] text-sm">
+              <Star size={28} className="mx-auto mb-2 opacity-30" />
+              <p className="mb-1">오늘 등록된 학원 일정이 없어요</p>
+              <Link href="/schedule" className="text-[var(--accent-text)] text-xs font-semibold hover:underline">
+                시간표 추가하기 →
               </Link>
             </div>
           ) : (
@@ -168,37 +132,57 @@ export default function HomePage() {
         </CardContent>
       </Card>
 
-      {/* 샘플 데이터 안내 */}
-      <div className="glass rounded-2xl px-4 py-3 flex items-start gap-2 text-sm">
-        <AlertCircle size={16} className="mt-0.5 shrink-0 text-amber-500 dark:text-amber-400" />
-        <p className="text-slate-700 dark:text-slate-200">
-          현재는 <strong>샘플 데이터</strong>로 동작합니다. 실제 조사 후{" "}
-          <Link href="/data-input" className="underline font-medium text-blue-600 dark:text-blue-300">데이터 입력</Link>에서
-          추가하고{" "}
-          <Link href="/schedule" className="underline font-medium text-blue-600 dark:text-blue-300">시간표</Link>를
-          등록해 주세요.
+      {/* ─── 통계 요약 ─────────────────────────────────────────────────── */}
+      <section>
+        <h2 className="text-sm font-bold text-[var(--text-strong)] mb-2 px-1">현황 요약</h2>
+        <DashboardSummary stats={stats} />
+      </section>
+
+      {/* ─── 샘플 데이터 안내 ─────────────────────────────────────────────── */}
+      <div
+        className="rounded-2xl px-4 py-3 flex items-start gap-2 text-sm"
+        style={{
+          backgroundColor: "var(--bg-soft)",
+          color: "var(--text-base)",
+        }}
+      >
+        <AlertCircle size={16} className="mt-0.5 shrink-0 text-[var(--accent)]" />
+        <p>
+          현재 <strong>샘플 데이터</strong>로 동작합니다.{" "}
+          <Link href="/data-input" className="text-[var(--accent-text)] font-semibold hover:underline">
+            데이터 입력
+          </Link>
+          {" / "}
+          <Link href="/schedule" className="text-[var(--accent-text)] font-semibold hover:underline">
+            시간표
+          </Link>
+          를 추가해 주세요.
         </p>
       </div>
 
-      {/* 기능 바로가기 */}
+      {/* ─── 기능 바로가기 (리스트 스타일) ───────────────────────────────── */}
       <section>
-        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 px-1">기능 바로가기</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {FEATURE_CARDS.map((f) => (
-            <Link key={f.href} href={f.href}>
-              <div className="glass rounded-2xl p-4 hover:scale-[1.02] transition-transform h-full group cursor-pointer">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${f.accent} flex items-center justify-center mb-3 shadow-lg`}>
-                  <f.icon size={18} className="text-white drop-shadow" />
-                </div>
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm mb-1">{f.title}</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed hidden sm:block">{f.desc}</p>
-                <div className="flex items-center gap-1 text-blue-500 dark:text-blue-300 text-xs font-medium mt-2 group-hover:gap-2 transition-all">
-                  바로가기 <ArrowRight size={11} />
-                </div>
+        <h2 className="text-sm font-bold text-[var(--text-strong)] mb-2 px-1">바로가기</h2>
+        <Card className="!p-0 overflow-hidden">
+          {FEATURE_CARDS.map((f, idx) => (
+            <Link
+              key={f.href}
+              href={f.href}
+              className={`flex items-center gap-3 px-5 py-4 hover:bg-[var(--bg-soft)] transition-colors ${
+                idx > 0 ? "border-t border-[var(--border)]" : ""
+              }`}
+            >
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center">
+                <f.icon size={18} className="text-[var(--accent)]" />
               </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[var(--text-strong)]">{f.title}</p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">{f.desc}</p>
+              </div>
+              <ChevronRight size={18} className="text-[var(--text-muted)] shrink-0" />
             </Link>
           ))}
-        </div>
+        </Card>
       </section>
     </div>
   );

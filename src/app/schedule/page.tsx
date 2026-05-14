@@ -45,16 +45,17 @@ export default function SchedulePage() {
   return (
     <div className="flex flex-col gap-6">
       {/* 페이지 헤더 */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-          <CalendarDays size={20} className="text-white" />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">학원 시간표</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            학원 수업 종료 시간을 등록하면 픽업 혼잡도를 자동으로 안내합니다
-          </p>
-        </div>
+      <div className="pt-2 pb-1">
+        <p className="text-sm text-[var(--text-muted)] mb-1 flex items-center gap-1.5">
+          <CalendarDays size={14} />
+          시간표
+        </p>
+        <h1 className="text-2xl font-bold text-[var(--text-strong)] leading-tight">
+          학원 수업 시간을<br/>등록해 주세요
+        </h1>
+        <p className="text-sm text-[var(--text-muted)] mt-2">
+          수업 종료 시간에 맞춰 픽업 혼잡도를 자동으로 안내합니다.
+        </p>
       </div>
 
       {/* 오늘의 픽업 일정 */}

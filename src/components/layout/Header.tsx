@@ -12,14 +12,23 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 glass-strong border-b border-white/30 dark:border-white/5">
+    <header
+      className="sticky top-0 z-50 border-b"
+      style={{
+        backgroundColor: "var(--bg-elev)",
+        borderColor: "var(--border)",
+      }}
+    >
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* 로고 */}
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-300 dark:to-indigo-300"
+          className="flex items-center gap-2 font-bold text-base"
+          style={{ color: "var(--text-strong)" }}
         >
-          <Car size={22} className="text-blue-600 dark:text-blue-300" />
+          <span className="w-7 h-7 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+            <Car size={16} className="text-white" />
+          </span>
           <span className="hidden sm:block">평촌학원가 혼잡도</span>
           <span className="block sm:hidden">평촌 혼잡도</span>
         </Link>
@@ -33,10 +42,10 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                  "flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors",
                   active
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md shadow-blue-500/20"
-                    : "text-slate-600 hover:bg-white/50 dark:text-slate-300 dark:hover:bg-white/10"
+                    ? "bg-[var(--accent-soft)] text-[var(--accent-text)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-soft)] hover:text-[var(--text-strong)]"
                 )}
               >
                 <item.icon size={16} />
@@ -48,7 +57,7 @@ export function Header() {
 
         {/* 모바일 햄버거 */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-white/40 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200"
+          className="md:hidden p-2 rounded-lg hover:bg-[var(--bg-soft)] text-[var(--text-base)]"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -57,7 +66,10 @@ export function Header() {
 
       {/* 모바일 드롭다운 */}
       {menuOpen && (
-        <nav className="md:hidden border-t border-white/30 dark:border-white/5 px-4 py-3 flex flex-col gap-1">
+        <nav
+          className="md:hidden border-t px-4 py-3 flex flex-col gap-1"
+          style={{ borderColor: "var(--border)" }}
+        >
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href;
             return (
@@ -66,10 +78,10 @@ export function Header() {
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                  "flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors",
                   active
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
-                    : "text-slate-700 hover:bg-white/40 dark:text-slate-200 dark:hover:bg-white/10"
+                    ? "bg-[var(--accent-soft)] text-[var(--accent-text)]"
+                    : "text-[var(--text-base)] hover:bg-[var(--bg-soft)]"
                 )}
               >
                 <item.icon size={16} />

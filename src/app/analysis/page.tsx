@@ -29,31 +29,30 @@ export default function AnalysisPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* 페이지 헤더 */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-          <BarChart3 size={20} className="text-white" />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">혼잡도 차트 분석</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            시간대별 혼잡도 점수를 비교하고 패턴을 파악합니다
-          </p>
-        </div>
+      <div className="pt-2 pb-1">
+        <p className="text-sm text-[var(--text-muted)] mb-1 flex items-center gap-1.5">
+          <BarChart3 size={14} />
+          분석
+        </p>
+        <h1 className="text-2xl font-bold text-[var(--text-strong)] leading-tight">
+          시간대별 혼잡도
+        </h1>
+        <p className="text-sm text-[var(--text-muted)] mt-2">
+          조사 데이터를 기반으로 시간대별 패턴을 분석합니다.
+        </p>
       </div>
 
       {/* 필터 */}
-      <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-slate-600 dark:text-slate-300">구역 선택</label>
+      <div className="flex flex-wrap gap-3 items-end">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-[var(--text-base)]">구역</label>
           <select
             value={areaId}
             onChange={(e) => setAreaId(e.target.value)}
-            className="glass rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input rounded-xl px-3 py-2 text-sm"
           >
             {AREAS.map((a) => (
-              <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">
-                {a.name}
-              </option>
+              <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
         </div>
@@ -63,10 +62,10 @@ export default function AnalysisPage() {
             <button
               key={r.label}
               onClick={() => setRangeIdx(i)}
-              className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
+              className={`px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                 rangeIdx === i
-                  ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-transparent shadow-md shadow-blue-500/20"
-                  : "glass text-slate-700 dark:text-slate-200 hover:scale-[1.02]"
+                  ? "bg-[var(--accent)] text-white"
+                  : "bg-[var(--bg-soft)] text-[var(--text-base)] hover:bg-[var(--border)]"
               }`}
             >
               {r.label}

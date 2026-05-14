@@ -9,13 +9,19 @@ import { formatDistance, formatDuration } from "@/lib/utils/formatters";
 import { Button } from "@/components/ui/Button";
 import type { MapMarker } from "./OpenMap";
 
-// Leaflet 은 window 객체를 사용하므로 SSR 비활성화 + 클라이언트 전용 로딩
 const OpenMap = dynamic(
   () => import("./OpenMap").then(m => m.OpenMap),
   {
     ssr: false,
     loading: () => (
-      <div className="w-full rounded-2xl glass flex items-center justify-center text-sm text-slate-400 dark:text-slate-500" style={{ height: 300 }}>
+      <div
+        className="w-full rounded-2xl flex items-center justify-center text-sm"
+        style={{
+          height: 300,
+          backgroundColor: "var(--bg-soft)",
+          color: "var(--text-muted)",
+        }}
+      >
         지도 불러오는 중...
       </div>
     ),
@@ -26,7 +32,6 @@ interface Props {
   userLocation: UserLocation | null;
 }
 
-// 평촌학원가 기본 중심 좌표
 const DEFAULT_CENTER = { lat: 37.3897, lng: 126.9519 };
 
 export function TravelTimeEstimate({ userLocation }: Props) {
@@ -36,7 +41,6 @@ export function TravelTimeEstimate({ userLocation }: Props) {
   const [error, setError]     = useState<string | null>(null);
   const [routePath, setRoutePath] = useState<number[][]>([]);
 
-  // 지도 마커 목록 계산
   const markers: MapMarker[] = [];
   if (userLocation) {
     markers.push({ lat: userLocation.lat, lng: userLocation.lng, type: "user" });
@@ -46,13 +50,9 @@ export function TravelTimeEstimate({ userLocation }: Props) {
     markers.push({ lat: destArea.lat, lng: destArea.lng, type: "destination" });
   }
 
-  // 지도 중심: 사용자 위치가 있으면 중간점, 없으면 학원가 기본값
   const mapCenter =
     userLocation && destArea
-      ? {
-          lat: (userLocation.lat + destArea.lat) / 2,
-          lng: (userLocation.lng + destArea.lng) / 2,
-        }
+      ? { lat: (userLocation.lat + destArea.lat) / 2, lng: (userLocation.lng + destArea.lng) / 2 }
       : destArea
       ? { lat: destArea.lat, lng: destArea.lng }
       : DEFAULT_CENTER;
@@ -99,19 +99,18 @@ export function TravelTimeEstimate({ userLocation }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* OpenStreetMap (Leaflet) */}
       <OpenMap
         center={mapCenter}
         zoom={userLocation ? 13 : 15}
         markers={markers}
         routePath={routePath}
-        height="300px"
+        height="280px"
       />
 
       {/* 목적지 선택 + 계산 버튼 */}
       <div className="flex gap-2 items-end flex-wrap">
-        <div className="flex flex-col gap-1 flex-1 min-w-40">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-200">목적지 구역</label>
+        <div className="flex flex-col gap-1.5 flex-1 min-w-40">
+          <label className="text-xs font-semibold text-[var(--text-base)]">목적지 구역</label>
           <select
             value={selectedAreaId}
             onChange={(e) => {
@@ -119,12 +118,10 @@ export function TravelTimeEstimate({ userLocation }: Props) {
               setResult(null);
               setRoutePath([]);
             }}
-            className="glass rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input rounded-xl px-3 py-2.5 text-sm"
           >
             {AREAS.map((a) => (
-              <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">
-                {a.name}
-              </option>
+              <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
         </div>
@@ -143,64 +140,58 @@ export function TravelTimeEstimate({ userLocation }: Props) {
         </Button>
       </div>
 
-      {/* 위치 미확인 안내 */}
       {!userLocation && (
-        <p className="text-xs text-slate-400 dark:text-slate-500">
+        <p className="text-xs text-[var(--text-muted)]">
           위 &apos;내 위치 확인&apos; 버튼을 먼저 눌러 GPS를 허용해 주세요.
         </p>
       )}
 
-      {/* 오류 메시지 */}
       {error && (
-        <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 bg-rose-50 dark:bg-rose-500/10 rounded-xl px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
           <AlertCircle size={16} className="mt-0.5 shrink-0" />
           <div>
-            <p className="font-medium">경로 계산 실패</p>
-            <p className="text-xs mt-0.5 opacity-90">{error}</p>
-            <p className="text-xs mt-1 opacity-70">
-              경로 서비스가 일시적으로 불안정할 수 있습니다. 잠시 후 다시 시도해 주세요.
+            <p className="font-bold">경로 계산 실패</p>
+            <p className="text-xs mt-0.5 opacity-80">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* 결과 — 토스 스타일 통계 */}
+      {result && (
+        <div className="grid grid-cols-2 gap-3">
+          <div className="card rounded-2xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock size={14} className="text-[var(--accent)]" />
+              <p className="text-xs font-semibold text-[var(--text-muted)]">예상 소요 시간</p>
+            </div>
+            <p className="text-2xl font-bold text-[var(--text-strong)] leading-none">
+              {result.durationText}
+            </p>
+          </div>
+          <div className="card rounded-2xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Route size={14} className="text-[var(--text-muted)]" />
+              <p className="text-xs font-semibold text-[var(--text-muted)]">경로 거리</p>
+            </div>
+            <p className="text-2xl font-bold text-[var(--text-strong)] leading-none">
+              {result.distanceText}
             </p>
           </div>
         </div>
       )}
 
-      {/* 결과 카드 */}
-      {result && (
-        <div className="grid grid-cols-2 gap-3">
-          <div className="glass rounded-xl p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30 shrink-0">
-              <Clock size={20} className="text-white" />
-            </div>
-            <div>
-              <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">예상 소요 시간</p>
-              <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{result.durationText}</p>
-            </div>
-          </div>
-          <div className="glass rounded-xl p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center shadow-lg shadow-slate-500/30 shrink-0">
-              <Route size={20} className="text-white" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">실제 경로 거리</p>
-              <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{result.distanceText}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 범례 */}
-      <div className="flex gap-4 text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex gap-4 text-xs text-[var(--text-muted)]">
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" />
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" />
           내 위치
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" />
           목적지
         </span>
         {routePath.length > 0 && (
           <span className="flex items-center gap-1.5">
-            <span className="w-4 h-1 bg-blue-400 inline-block rounded" />
+            <span className="w-4 h-0.5 bg-blue-500 inline-block rounded" />
             경로
           </span>
         )}

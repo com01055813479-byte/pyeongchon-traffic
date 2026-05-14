@@ -10,22 +10,22 @@ export function formatDistance(meters: number): string {
 }
 
 export function scoreToColorClass(score: number): string {
-  if (score <= 30) return "text-emerald-700 dark:text-emerald-300 bg-emerald-500/15";
-  if (score <= 55) return "text-amber-700 dark:text-amber-300 bg-amber-500/15";
-  if (score <= 75) return "text-orange-700 dark:text-orange-300 bg-orange-500/15";
-  return "text-rose-700 dark:text-rose-300 bg-rose-500/15";
+  if (score <= 30) return "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10";
+  if (score <= 55) return "text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10";
+  if (score <= 75) return "text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-500/10";
+  return "text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10";
 }
 
 export function scoreToBadgeClass(score: number): string {
-  if (score <= 30) return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30";
-  if (score <= 55) return "bg-amber-500/15  text-amber-700  dark:text-amber-300  border-amber-500/30";
-  if (score <= 75) return "bg-orange-500/15 text-orange-700 dark:text-orange-300 border-orange-500/30";
-  return "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30";
+  if (score <= 30) return "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+  if (score <= 55) return "bg-amber-50  dark:bg-amber-500/10  text-amber-700  dark:text-amber-300";
+  if (score <= 75) return "bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300";
+  return "bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300";
 }
 
 export function scoreToBarColor(score: number): string {
-  if (score <= 30) return "bg-green-500";
-  if (score <= 55) return "bg-yellow-500";
+  if (score <= 30) return "bg-emerald-500";
+  if (score <= 55) return "bg-amber-500";
   if (score <= 75) return "bg-orange-500";
-  return "bg-red-500";
+  return "bg-rose-500";
 }

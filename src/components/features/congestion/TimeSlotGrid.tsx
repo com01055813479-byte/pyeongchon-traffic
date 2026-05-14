@@ -12,7 +12,7 @@ export function TimeSlotGrid({ recommendations }: Props) {
 
   if (withData.length === 0) {
     return (
-      <p className="text-slate-400 dark:text-slate-500 text-sm text-center py-6">
+      <p className="text-[var(--text-muted)] text-sm text-center py-6">
         아직 입력된 조사 데이터가 없습니다.
       </p>
     );
@@ -24,34 +24,25 @@ export function TimeSlotGrid({ recommendations }: Props) {
         <div
           key={rec.timeSlot.id}
           className={cn(
-            "glass rounded-xl p-3 flex flex-col gap-1 relative",
-            rec.isRecommended && "ring-1 ring-emerald-400/40 dark:ring-emerald-400/30"
+            "card rounded-xl p-3 flex flex-col gap-1 relative",
+            rec.isRecommended && "ring-2 ring-emerald-500"
           )}
         >
           {rec.isRecommended && (
-            <CheckCircle
-              size={14}
-              className="absolute top-2 right-2 text-emerald-500 dark:text-emerald-400"
-            />
+            <CheckCircle size={14} className="absolute top-2 right-2 text-emerald-500" />
           )}
-          <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
-            {rec.timeSlot.start}
-          </span>
-          <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
+          <span className="text-xs font-semibold text-[var(--text-base)]">{rec.timeSlot.start}</span>
+          <span className="text-xl font-bold text-[var(--text-strong)]">
             {rec.score.score}
-            <span className="text-xs font-normal text-slate-400 dark:text-slate-500 ml-0.5">점</span>
+            <span className="text-xs font-medium text-[var(--text-muted)] ml-0.5">점</span>
           </span>
-          <span
-            className={cn(
-              "text-[10px] font-semibold rounded-full px-1.5 py-0.5 border w-fit",
-              scoreToBadgeClass(rec.score.score)
-            )}
-          >
+          <span className={cn(
+            "text-[10px] font-bold rounded-full px-1.5 py-0.5 w-fit",
+            scoreToBadgeClass(rec.score.score)
+          )}>
             {rec.score.level}
           </span>
-          <span className="text-[10px] text-slate-400 dark:text-slate-500">
-            평균 {rec.expectedCarCount}대
-          </span>
+          <span className="text-[10px] text-[var(--text-muted)]">평균 {rec.expectedCarCount}대</span>
         </div>
       ))}
     </div>

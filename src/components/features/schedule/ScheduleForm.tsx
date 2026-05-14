@@ -12,11 +12,9 @@ interface Props {
   onAdd: (schedule: Omit<AcademySchedule, "id">) => void;
 }
 
-const inputCls =
-  "glass rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500";
-
-const labelCls = "text-sm font-medium text-slate-700 dark:text-slate-200";
-const helpCls  = "text-xs text-slate-400 dark:text-slate-500";
+const inputCls = "input rounded-xl px-3 py-2.5 text-sm";
+const labelCls = "text-xs font-bold text-[var(--text-base)]";
+const helpCls  = "text-xs text-[var(--text-muted)]";
 
 export function ScheduleForm({ onAdd }: Props) {
   const [academyName, setAcademyName] = useState("");
@@ -49,7 +47,7 @@ export function ScheduleForm({ onAdd }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <label className={labelCls}>학원 이름 <span className="text-rose-400">*</span></label>
+        <label className={labelCls}>학원 이름 <span className="text-rose-500">*</span></label>
         <input
           type="text"
           value={academyName}
@@ -61,8 +59,8 @@ export function ScheduleForm({ onAdd }: Props) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className={labelCls}>수업 요일 <span className="text-rose-400">*</span></label>
-        <div className="flex gap-2 flex-wrap">
+        <label className={labelCls}>수업 요일 <span className="text-rose-500">*</span></label>
+        <div className="flex gap-1.5 flex-wrap">
           {ALL_DAYS.map((day) => {
             const active = days.includes(day);
             const isWeekend = day === "토" || day === "일";
@@ -71,10 +69,12 @@ export function ScheduleForm({ onAdd }: Props) {
                 key={day}
                 type="button"
                 onClick={() => toggleDay(day)}
-                className={`w-10 h-10 rounded-xl text-sm font-semibold transition-all ${
+                className={`w-10 h-10 rounded-xl text-sm font-bold transition-colors ${
                   active
-                    ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/30"
-                    : `glass ${isWeekend ? "text-rose-500 dark:text-rose-300" : "text-slate-600 dark:text-slate-300"}`
+                    ? "bg-[var(--accent)] text-white"
+                    : `bg-[var(--bg-soft)] hover:bg-[var(--border)] ${
+                        isWeekend ? "text-rose-500 dark:text-rose-400" : "text-[var(--text-base)]"
+                      }`
                 }`}
               >
                 {day}
@@ -87,7 +87,7 @@ export function ScheduleForm({ onAdd }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className={labelCls}>수업 종료 시간 <span className="text-rose-400">*</span></label>
+          <label className={labelCls}>수업 종료 시간 <span className="text-rose-500">*</span></label>
           <input
             type="time"
             value={endTime}
@@ -95,23 +95,19 @@ export function ScheduleForm({ onAdd }: Props) {
             className={inputCls}
             required
           />
-          <p className={helpCls}>학원 수업이 끝나는 시간</p>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className={labelCls}>픽업 구역 <span className="text-rose-400">*</span></label>
+          <label className={labelCls}>픽업 구역 <span className="text-rose-500">*</span></label>
           <select
             value={areaId}
             onChange={(e) => setAreaId(e.target.value)}
             className={inputCls}
           >
             {AREAS.map((a) => (
-              <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">
-                {a.name}
-              </option>
+              <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
-          <p className={helpCls}>학원이 위치한 구역</p>
         </div>
       </div>
 
@@ -126,9 +122,9 @@ export function ScheduleForm({ onAdd }: Props) {
         />
       </div>
 
-      <Button type="submit" disabled={!academyName.trim() || days.length === 0} className="self-start">
+      <Button type="submit" disabled={!academyName.trim() || days.length === 0} size="lg">
         <PlusCircle size={16} />
-        {saved ? "저장됨!" : "시간표 추가"}
+        {saved ? "저장됨" : "시간표 추가하기"}
       </Button>
     </form>
   );

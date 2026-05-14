@@ -21,10 +21,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen">
         <SettingsProvider>
-          <div className="relative z-10">
-            <Header />
-            <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
-          </div>
+          <Header />
+          <main className="max-w-2xl mx-auto px-4 py-5 pb-20">{children}</main>
         </SettingsProvider>
       </body>
     </html>

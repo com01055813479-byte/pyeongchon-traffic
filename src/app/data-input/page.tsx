@@ -45,14 +45,17 @@ export default function DataInputPage() {
     <div className="flex flex-col gap-6">
       {/* 페이지 헤더 */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-sky-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <ClipboardList size={20} className="text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">현장 조사 데이터 입력</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">시간대별 차량 수 현장 조사 결과를 입력합니다</p>
-          </div>
+        <div className="pt-2 pb-1">
+          <p className="text-sm text-[var(--text-muted)] mb-1 flex items-center gap-1.5">
+            <ClipboardList size={14} />
+            현장 조사
+          </p>
+          <h1 className="text-2xl font-bold text-[var(--text-strong)] leading-tight">
+            차량 수 데이터 입력
+          </h1>
+          <p className="text-sm text-[var(--text-muted)] mt-2">
+            시간대별 현장 조사 결과를 입력하면 혼잡도 분석에 반영됩니다.
+          </p>
         </div>
         <Button variant="secondary" size="sm" onClick={handleExportCSV}>
           <Download size={14} />

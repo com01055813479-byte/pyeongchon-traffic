@@ -16,83 +16,75 @@ export function TodayScheduleCard({ info }: Props) {
   const isBad = congestion.score > 75;
 
   return (
-    <div
-      className={cn(
-        "glass rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden",
-        isGood && "ring-1 ring-emerald-400/40 dark:ring-emerald-400/30",
-        isBad  && "ring-1 ring-red-400/40 dark:ring-red-400/30"
-      )}
-    >
-      {/* 색상 액센트 — 좌측 그라데이션 바 */}
-      <div
-        className={cn(
-          "absolute left-0 top-0 bottom-0 w-1",
-          isGood ? "bg-gradient-to-b from-emerald-400 to-green-500"
-                 : isBad ? "bg-gradient-to-b from-rose-400 to-red-500"
-                         : "bg-gradient-to-b from-amber-400 to-orange-500"
-        )}
-      />
-
+    <div className="card rounded-2xl p-4 flex flex-col gap-3">
       {/* 헤더 */}
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">{schedule.academyName}</h3>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <div className="min-w-0 flex-1">
+          <p className="font-bold text-[var(--text-strong)] text-base truncate">
+            {schedule.academyName}
+          </p>
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-xs text-[var(--text-muted)]">
             <span className="flex items-center gap-1">
-              <Clock size={13} />
-              <span className="font-medium text-slate-700 dark:text-slate-200">{schedule.endTime} 수업 종료</span>
+              <Clock size={12} />
+              <span className="font-semibold text-[var(--text-base)]">{schedule.endTime} 종료</span>
             </span>
             <span className="flex items-center gap-1">
-              <MapPin size={13} />
+              <MapPin size={12} />
               {area?.name ?? schedule.areaId}
             </span>
           </div>
         </div>
 
-        <span className={cn(
-          "text-xs font-semibold rounded-full px-2.5 py-1 border shrink-0",
-          scoreToBadgeClass(congestion.score)
-        )}>
+        <span
+          className={cn(
+            "text-[10px] font-bold rounded-full px-2 py-0.5 shrink-0",
+            scoreToBadgeClass(congestion.score)
+          )}
+        >
           {congestion.level}
         </span>
       </div>
 
       {/* 혼잡도 점수 바 */}
       <div className="flex flex-col gap-1.5">
-        <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
-          <span>혼잡도</span>
-          <span className="font-semibold text-slate-700 dark:text-slate-200">{congestion.score}점</span>
+        <div className="flex justify-between text-xs">
+          <span className="text-[var(--text-muted)]">혼잡도</span>
+          <span className="font-bold text-[var(--text-strong)]">{congestion.score}</span>
         </div>
-        <div className="w-full bg-slate-200/60 dark:bg-white/10 rounded-full h-2">
+        <div className="w-full bg-[var(--bg-soft)] rounded-full h-1.5 overflow-hidden">
           <div
-            className={cn("h-2 rounded-full transition-all duration-500", scoreToBarColor(congestion.score))}
+            className={cn("h-full rounded-full transition-all duration-500", scoreToBarColor(congestion.score))}
             style={{ width: `${congestion.score}%` }}
           />
         </div>
         {expectedCarCount > 0 && (
-          <p className="text-xs text-slate-400 dark:text-slate-500">이 시간대 평균 {expectedCarCount}대 관측</p>
+          <p className="text-[11px] text-[var(--text-muted)]">평균 {expectedCarCount}대 관측</p>
         )}
       </div>
 
-      {/* 픽업 추천 안내 */}
-      <div className={cn(
-        "flex items-start gap-2 rounded-xl px-3 py-2.5 text-sm border",
-        isGood ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
-               : isBad ? "bg-red-500/10 border-red-500/30 text-red-700 dark:text-red-300"
-                       : "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
-      )}>
-        {isGood ? (
-          <CheckCircle2 size={15} className="mt-0.5 shrink-0" />
-        ) : (
-          <AlertCircle size={15} className="mt-0.5 shrink-0" />
+      {/* 픽업 추천 */}
+      <div
+        className={cn(
+          "flex items-start gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold",
+          isGood
+            ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+            : isBad
+            ? "bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300"
+            : "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300"
         )}
-        <span className="font-medium">{suggestedArrivalText}</span>
+      >
+        {isGood ? (
+          <CheckCircle2 size={14} className="mt-0.5 shrink-0" />
+        ) : (
+          <AlertCircle size={14} className="mt-0.5 shrink-0" />
+        )}
+        <span>{suggestedArrivalText}</span>
       </div>
 
       {/* 메모 */}
       {schedule.note && (
-        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-          <StickyNote size={13} className="shrink-0" />
+        <div className="flex items-center gap-1 text-[11px] text-[var(--text-muted)]">
+          <StickyNote size={11} className="shrink-0" />
           {schedule.note}
         </div>
       )}
