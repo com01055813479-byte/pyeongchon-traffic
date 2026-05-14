@@ -7,6 +7,7 @@ import {
   type NaverMapInstance,
   type NaverMarker,
   type NaverPolyline,
+  type NaverTrafficLayer,
 } from "@/lib/utils/naverMapLoader";
 
 function getNaver(): NaverNamespace | null {
@@ -29,6 +30,8 @@ interface NaverMapProps {
   markers?: MapMarker[];
   routePath?: number[][]; // [[lng, lat], ...]
   height?: string;
+  /** 실시간 교통량 레이어 (도로 색깔로 혼잡도 표시) */
+  showTraffic?: boolean;
 }
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID ?? "";
@@ -39,11 +42,13 @@ export function NaverMap({
   markers = [],
   routePath = [],
   height = "280px",
+  showTraffic = false,
 }: NaverMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef       = useRef<NaverMapInstance | null>(null);
   const markersRef   = useRef<NaverMarker[]>([]);
   const polylineRef  = useRef<NaverPolyline | null>(null);
+  const trafficRef   = useRef<NaverTrafficLayer | null>(null);
 
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +80,16 @@ export function NaverMap({
             center: new nm.maps.LatLng(center.lat, center.lng),
             zoom,
             zoomControl: true,
+            zoomControlOptions: {
+              // SMALL = 2, 작은 컨트롤
+              style: nm.maps.ZoomControlStyle?.SMALL ?? 2,
+              // TOP_LEFT = 1, 좌측 상단 (우측 상단의 교통량 토글과 충돌 방지)
+              position: nm.maps.Position?.TOP_LEFT ?? 1,
+            },
+            // 네이버 로고 옆 정보 컨트롤 비활성 (공간 절약)
+            mapDataControl: false,
+            logoControl: true,
+            scaleControl: false,
           });
           setReady(true);
         } catch (e) {
@@ -96,6 +111,10 @@ export function NaverMap({
       if (polylineRef.current) {
         try { polylineRef.current.setMap(null); } catch {}
         polylineRef.current = null;
+      }
+      if (trafficRef.current) {
+        try { trafficRef.current.setMap(null); } catch {}
+        trafficRef.current = null;
       }
       mapRef.current = null;
     };
@@ -175,6 +194,30 @@ export function NaverMap({
     }
   }, [routePath, ready]);
 
+  // ── 실시간 교통량 레이어 ────────────────────────────────────────────
+  useEffect(() => {
+    if (!ready) return;
+    const map = mapRef.current;
+    const nm  = getNaver();
+    if (!map || !nm) return;
+
+    try {
+      if (showTraffic) {
+        if (!trafficRef.current) {
+          // 5분마다 자동 갱신
+          trafficRef.current = new nm.maps.TrafficLayer({ interval: 300000 });
+        }
+        trafficRef.current.setMap(map);
+      } else {
+        if (trafficRef.current) {
+          trafficRef.current.setMap(null);
+        }
+      }
+    } catch (e) {
+      console.error("[NaverMap] traffic layer error:", e);
+    }
+  }, [showTraffic, ready]);
+
   // ── 중심 이동 ────────────────────────────────────────────────────────
   useEffect(() => {
     if (!ready) return;
@@ -217,6 +260,10 @@ export function NaverMap({
       style={{
         height,
         border: "1px solid var(--border)",
+        // 지도 컨트롤이 페이지의 다른 UI(헤더 등) 위로 떠오르지 않도록
+        // 별도 stacking context 형성
+        isolation: "isolate",
+        zIndex: 0,
       }}
     />
   );

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
-  ClipboardList,
   BarChart3,
   MapPin,
   ChevronRight,
@@ -46,10 +45,9 @@ function calcStats(areaId: string, rushMultiplier: number): DashboardStats {
 }
 
 const FEATURE_CARDS = [
-  { href: "/schedule",   icon: CalendarDays,   title: "학원 시간표", desc: "수업 종료 시간 등록" },
-  { href: "/data-input", icon: ClipboardList,  title: "현장 조사",    desc: "차량 수 데이터 입력" },
-  { href: "/analysis",   icon: BarChart3,      title: "혼잡도 분석",  desc: "시간대별 차트" },
-  { href: "/settings",   icon: Settings,       title: "설정",         desc: "테마, 데이터, 가중치" },
+  { href: "/schedule", icon: CalendarDays, title: "학원 시간표", desc: "수업 종료 시간 확인" },
+  { href: "/analysis", icon: BarChart3,    title: "혼잡도 분석", desc: "시간대별 차트" },
+  { href: "/settings", icon: Settings,     title: "설정",        desc: "테마, 데이터, 가중치" },
 ];
 
 export default function HomePage() {
@@ -141,7 +139,7 @@ export default function HomePage() {
         <DashboardSummary stats={stats} />
       </section>
 
-      {/* ─── 샘플 데이터 안내 ─────────────────────────────────────────────── */}
+      {/* ─── 샘플 데이터 안내 (조사 데이터 입력 전 임시) ─────────────────── */}
       <div
         className="rounded-2xl px-4 py-3 flex items-start gap-2 text-sm"
         style={{
@@ -151,15 +149,7 @@ export default function HomePage() {
       >
         <AlertCircle size={16} className="mt-0.5 shrink-0 text-[var(--accent)]" />
         <p>
-          현재 <strong>샘플 데이터</strong>로 동작합니다.{" "}
-          <Link href="/data-input" className="text-[var(--accent-text)] font-semibold hover:underline">
-            데이터 입력
-          </Link>
-          {" / "}
-          <Link href="/schedule" className="text-[var(--accent-text)] font-semibold hover:underline">
-            시간표
-          </Link>
-          를 추가해 주세요.
+          아직 현장 조사 안해서 <strong>가짜 데이터</strong> 넣어논거임. — 조은규가
         </p>
       </div>
 

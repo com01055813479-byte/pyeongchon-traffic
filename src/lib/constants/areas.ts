@@ -1,29 +1,29 @@
 import type { Area } from "@/lib/types";
 
-// 평촌학원가 주요 구역
+// 평촌학원가 주요 구역 (NCP Geocoding API 로 좌표 확정)
 export const AREAS: Area[] = [
   {
     id: "pyeongchon-main",
-    name: "평촌학원가 중앙로",
-    description: "평촌학원가 메인 도로 (호계동)",
-    lat: 37.3908,
-    lng: 126.9488,
+    name: "평촌대로 학원가",
+    description: "평촌대로 128 (메인 도로)",
+    lat: 37.3837454,
+    lng: 126.9601908,
     maxCapacity: 80,
   },
   {
-    id: "pyeongchon-north",
-    name: "평촌학원가 북쪽",
-    description: "귀인중학교 사거리 방면",
-    lat: 37.3928,
-    lng: 126.9478,
+    id: "pyeongchon-back",
+    name: "평촌동 학원가 뒷길",
+    description: "평촌동 955 (학원가 후면)",
+    lat: 37.3835677,
+    lng: 126.9609422,
     maxCapacity: 60,
   },
   {
-    id: "pyeongchon-south",
-    name: "평촌학원가 남쪽",
-    description: "평촌역 인근 골목",
-    lat: 37.3882,
-    lng: 126.9498,
+    id: "hogye-back",
+    name: "호계동 학원가 뒷길",
+    description: "호계동 1162 (학원가 후면)",
+    lat: 37.3834036,
+    lng: 126.9594554,
     maxCapacity: 50,
   },
 ];

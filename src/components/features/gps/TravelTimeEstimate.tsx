@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Navigation, Clock, Route, Loader2, AlertCircle } from "lucide-react";
+import { Navigation, Clock, Route, Loader2, AlertCircle, Activity } from "lucide-react";
 import type { UserLocation, TravelTimeResult } from "@/lib/types";
 import { AREAS } from "@/lib/constants/areas";
 import { formatDistance, formatDuration } from "@/lib/utils/formatters";
@@ -35,7 +35,7 @@ interface Props {
   onOverrideLocation?: (loc: UserLocation, label: string) => void;
 }
 
-const DEFAULT_CENTER = { lat: 37.3908, lng: 126.9488 };
+const DEFAULT_CENTER = { lat: 37.3836, lng: 126.9602 };
 
 export function TravelTimeEstimate({ userLocation, onOverrideLocation }: Props) {
   const [selectedAreaId, setSelectedAreaId] = useState(AREAS[0].id);
@@ -43,6 +43,7 @@ export function TravelTimeEstimate({ userLocation, onOverrideLocation }: Props) 
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState<string | null>(null);
   const [routePath, setRoutePath] = useState<number[][]>([]);
+  const [showTraffic, setShowTraffic] = useState(true); // 기본 ON
 
   const markers: MapMarker[] = [];
   if (userLocation) {
@@ -102,13 +103,30 @@ export function TravelTimeEstimate({ userLocation, onOverrideLocation }: Props) 
 
   return (
     <div className="flex flex-col gap-4">
-      <NaverMap
-        center={mapCenter}
-        zoom={userLocation ? 13 : 15}
-        markers={markers}
-        routePath={routePath}
-        height="280px"
-      />
+      <div className="relative">
+        <NaverMap
+          center={mapCenter}
+          zoom={userLocation ? 13 : 15}
+          markers={markers}
+          routePath={routePath}
+          height="280px"
+          showTraffic={showTraffic}
+        />
+        {/* 교통량 토글 — 지도 우측 상단 (zoom 컨트롤은 좌측 상단으로 분리) */}
+        <button
+          type="button"
+          onClick={() => setShowTraffic((v) => !v)}
+          className={`absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-md transition-colors ${
+            showTraffic
+              ? "bg-[var(--accent)] text-white"
+              : "bg-[var(--bg-elev)] text-[var(--text-base)] border border-[var(--border)]"
+          }`}
+          title="실시간 도로 혼잡도 표시"
+        >
+          <Activity size={12} />
+          교통량 {showTraffic ? "ON" : "OFF"}
+        </button>
+      </div>
 
       {/* 주소·장소명으로 출발지 검색 */}
       {onOverrideLocation && (

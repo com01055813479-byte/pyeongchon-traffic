@@ -17,8 +17,17 @@ export type NaverNamespace = {
     Polyline: new (opts: Record<string, unknown>) => NaverPolyline;
     Point: new (x: number, y: number) => unknown;
     Size: new (w: number, h: number) => unknown;
+    TrafficLayer: new (opts?: { interval?: number }) => NaverTrafficLayer;
+    /** 컨트롤 배치 위치 enum (TOP_LEFT=1, TOP_CENTER=2, ... BOTTOM_RIGHT=9) */
+    Position: { [k: string]: number };
+    /** 줌 컨트롤 스타일 enum (LARGE=1, SMALL=2) */
+    ZoomControlStyle: { [k: string]: number };
   };
 };
+
+export interface NaverTrafficLayer {
+  setMap: (m: NaverMapInstance | null) => void;
+}
 
 export interface NaverMapInstance {
   setCenter: (latLng: NaverLatLng) => void;

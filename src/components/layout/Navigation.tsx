@@ -1,4 +1,4 @@
-import { LayoutDashboard, ClipboardList, BarChart3, Settings, CalendarDays } from "lucide-react";
+import { LayoutDashboard, BarChart3, Settings, CalendarDays } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
@@ -8,6 +8,10 @@ export interface NavItem {
   description: string;
 }
 
+/**
+ * 공개 네비게이션 — 일반 사용자에게 보이는 메뉴.
+ * "데이터 입력"(/data-input)은 동아리원만 사용하므로 URL 로만 접근 (메뉴에 노출 X).
+ */
 export const NAV_ITEMS: NavItem[] = [
   {
     href: "/",
@@ -19,19 +23,13 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/schedule",
     label: "시간표",
     icon: CalendarDays,
-    description: "학원 수업 시간표 관리",
-  },
-  {
-    href: "/data-input",
-    label: "데이터 입력",
-    icon: ClipboardList,
-    description: "현장 조사 데이터 입력 및 관리",
+    description: "학원 수업 시간표",
   },
   {
     href: "/analysis",
     label: "분석",
     icon: BarChart3,
-    description: "시간대별 혼잡도 차트 분석",
+    description: "시간대별 혼잡도 차트",
   },
   {
     href: "/settings",
