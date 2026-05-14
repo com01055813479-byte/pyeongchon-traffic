@@ -12,7 +12,7 @@ export function TimeSlotGrid({ recommendations }: Props) {
 
   if (withData.length === 0) {
     return (
-      <p className="text-gray-400 text-sm text-center py-6">
+      <p className="text-slate-400 dark:text-slate-500 text-sm text-center py-6">
         아직 입력된 조사 데이터가 없습니다.
       </p>
     );
@@ -24,24 +24,22 @@ export function TimeSlotGrid({ recommendations }: Props) {
         <div
           key={rec.timeSlot.id}
           className={cn(
-            "rounded-xl border p-3 flex flex-col gap-1 relative",
-            rec.isRecommended
-              ? "border-green-300 bg-green-50"
-              : "border-gray-100 bg-white"
+            "glass rounded-xl p-3 flex flex-col gap-1 relative",
+            rec.isRecommended && "ring-1 ring-emerald-400/40 dark:ring-emerald-400/30"
           )}
         >
           {rec.isRecommended && (
             <CheckCircle
               size={14}
-              className="absolute top-2 right-2 text-green-500"
+              className="absolute top-2 right-2 text-emerald-500 dark:text-emerald-400"
             />
           )}
-          <span className="text-xs font-medium text-gray-700">
+          <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
             {rec.timeSlot.start}
           </span>
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {rec.score.score}
-            <span className="text-xs font-normal text-gray-400 ml-0.5">점</span>
+            <span className="text-xs font-normal text-slate-400 dark:text-slate-500 ml-0.5">점</span>
           </span>
           <span
             className={cn(
@@ -51,7 +49,7 @@ export function TimeSlotGrid({ recommendations }: Props) {
           >
             {rec.score.level}
           </span>
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[10px] text-slate-400 dark:text-slate-500">
             평균 {rec.expectedCarCount}대
           </span>
         </div>

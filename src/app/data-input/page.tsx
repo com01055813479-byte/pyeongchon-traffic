@@ -46,12 +46,12 @@ export default function DataInputPage() {
       {/* 페이지 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-            <ClipboardList size={20} className="text-blue-500" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-sky-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <ClipboardList size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">현장 조사 데이터 입력</h1>
-            <p className="text-sm text-gray-500">시간대별 차량 수 현장 조사 결과를 입력합니다</p>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">현장 조사 데이터 입력</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">시간대별 차량 수 현장 조사 결과를 입력합니다</p>
           </div>
         </div>
         <Button variant="secondary" size="sm" onClick={handleExportCSV}>

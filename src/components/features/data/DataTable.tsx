@@ -16,7 +16,7 @@ interface Props {
 export function DataTable({ records, onDelete }: Props) {
   if (records.length === 0) {
     return (
-      <div className="text-center py-10 text-gray-400 text-sm">
+      <div className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm">
         입력된 데이터가 없습니다. 위 폼에서 추가해 주세요.
       </div>
     );
@@ -26,9 +26,9 @@ export function DataTable({ records, onDelete }: Props) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm border-collapse">
         <thead>
-          <tr className="border-b border-gray-100">
+          <tr className="border-b border-white/40 dark:border-white/10">
             {["날짜", "시간대", "구역", "차량 수", "날씨", "혼잡도", ""].map((h) => (
-              <th key={h} className="text-left text-xs font-semibold text-gray-500 py-2 px-3">
+              <th key={h} className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 py-2 px-3">
                 {h}
               </th>
             ))}
@@ -46,14 +46,14 @@ export function DataTable({ records, onDelete }: Props) {
                 slot?.isRushHour ?? false
               );
               return (
-                <tr key={rec.id} className="border-b border-gray-50 hover:bg-gray-50">
-                  <td className="py-2.5 px-3 text-gray-700">{rec.date}</td>
-                  <td className="py-2.5 px-3 text-gray-700">{rec.timeSlot}</td>
-                  <td className="py-2.5 px-3 text-gray-700">
+                <tr key={rec.id} className="border-b border-white/30 dark:border-white/5 hover:bg-white/30 dark:hover:bg-white/5 transition-colors">
+                  <td className="py-2.5 px-3 text-slate-700 dark:text-slate-200">{rec.date}</td>
+                  <td className="py-2.5 px-3 text-slate-700 dark:text-slate-200">{rec.timeSlot}</td>
+                  <td className="py-2.5 px-3 text-slate-700 dark:text-slate-200">
                     {AREA_MAP[rec.areaId]?.name ?? rec.areaId}
                   </td>
-                  <td className="py-2.5 px-3 text-gray-900 font-medium">{rec.carCount}대</td>
-                  <td className="py-2.5 px-3 text-gray-500">{rec.weather}</td>
+                  <td className="py-2.5 px-3 text-slate-900 dark:text-slate-100 font-medium">{rec.carCount}대</td>
+                  <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400">{rec.weather}</td>
                   <td className="py-2.5 px-3">
                     <span
                       className={cn(
@@ -67,7 +67,7 @@ export function DataTable({ records, onDelete }: Props) {
                   <td className="py-2.5 px-3">
                     <button
                       onClick={() => onDelete(rec.id)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-red-500/15 text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors"
                     >
                       <Trash2 size={14} />
                     </button>

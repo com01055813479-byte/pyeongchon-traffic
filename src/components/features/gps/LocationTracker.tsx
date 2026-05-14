@@ -64,9 +64,9 @@ export function LocationTracker({ onLocation }: Props) {
       </Button>
 
       {state === "success" && location && (
-        <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800">
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
           <p className="font-medium">위치 확인 완료</p>
-          <p className="text-xs text-green-600 mt-0.5">
+          <p className="text-xs text-emerald-600/90 dark:text-emerald-300/80 mt-0.5">
             위도 {location.lat.toFixed(5)}, 경도 {location.lng.toFixed(5)} (정확도{" "}
             {Math.round(location.accuracy)}m)
           </p>
@@ -74,7 +74,7 @@ export function LocationTracker({ onLocation }: Props) {
       )}
 
       {state === "error" && (
-        <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+        <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300">
           <AlertCircle size={16} className="mt-0.5 shrink-0" />
           <span>{errorMsg}</span>
         </div>

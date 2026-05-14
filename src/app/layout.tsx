@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { SettingsProvider, themeInlineScript } from "@/lib/context/SettingsContext";
 
 export const metadata: Metadata = {
   title: "평촌학원가 혼잡도 분석",
@@ -13,10 +14,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className="min-h-screen bg-slate-50">
-        <Header />
-        <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        {/* 초기 페인트 전에 .dark 클래스 적용 → FOUC/하이드레이션 미스매치 방지 */}
+        <script dangerouslySetInnerHTML={{ __html: themeInlineScript }} />
+      </head>
+      <body className="min-h-screen">
+        <SettingsProvider>
+          <div className="relative z-10">
+            <Header />
+            <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
+          </div>
+        </SettingsProvider>
       </body>
     </html>
   );

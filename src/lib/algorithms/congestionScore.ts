@@ -9,24 +9,27 @@ import type {
 import { TIME_SLOTS } from "@/lib/constants/timeSlots";
 import { AREA_MAP } from "@/lib/constants/areas";
 
+const DEFAULT_RUSH_MULTIPLIER = 1.15;
+
 // ─── 기본 혼잡도 점수 계산 ────────────────────────────────────────────────────
 
 /**
  * 차량 수 → 혼잡도 점수(0~100) 변환
  * - 구역별 최대 수용 차량 수를 기준으로 정규화
- * - 러시아워 시간대에는 1.15배 가중치 적용
+ * - 러시아워 시간대에는 가중치 적용 (기본 1.15, 설정에서 조절 가능)
  */
 export function calcCongestionScore(
   carCount: number,
   areaId: string,
-  isRushHour: boolean
+  isRushHour: boolean,
+  rushMultiplier: number = DEFAULT_RUSH_MULTIPLIER
 ): CongestionScore {
   const area = AREA_MAP[areaId];
   const maxCap = area?.maxCapacity ?? 60;
 
   const ratio = Math.min(carCount / maxCap, 1.5);
-  const rushMultiplier = isRushHour ? 1.15 : 1.0;
-  const raw = Math.min(Math.round(ratio * 100 * rushMultiplier), 100);
+  const mult = isRushHour ? rushMultiplier : 1.0;
+  const raw = Math.min(Math.round(ratio * 100 * mult), 100);
 
   return resolveLevel(raw);
 }
@@ -59,13 +62,10 @@ function resolveLevel(score: number): CongestionScore {
 
 // ─── 일반 시간대별 픽업 추천 ──────────────────────────────────────────────────
 
-/**
- * 조사 데이터 목록에서 시간대별 평균 혼잡도를 계산하고
- * 전체 시간대의 추천 정보를 반환합니다.
- */
 export function buildPickupRecommendations(
   records: SurveyRecord[],
-  targetAreaId: string
+  targetAreaId: string,
+  rushMultiplier: number = DEFAULT_RUSH_MULTIPLIER
 ): PickupRecommendation[] {
   const areaRecords = records.filter((r) => r.areaId === targetAreaId);
 
@@ -81,7 +81,7 @@ export function buildPickupRecommendations(
       ? Math.round(counts.reduce((a, b) => a + b, 0) / counts.length)
       : 0;
 
-    const congestion = calcCongestionScore(avgCount, targetAreaId, slot.isRushHour);
+    const congestion = calcCongestionScore(avgCount, targetAreaId, slot.isRushHour, rushMultiplier);
 
     return {
       timeSlot: slot,
@@ -100,15 +100,11 @@ export function buildPickupRecommendations(
 
 // ─── 시간표 기반 픽업 추천 ────────────────────────────────────────────────────
 
-/**
- * 학원 시간표의 수업 종료 시각 기준으로
- * 해당 시간대의 혼잡도와 픽업 도착 권장 안내를 반환합니다.
- */
 export function getSchedulePickupInfo(
   schedule: AcademySchedule,
-  records: SurveyRecord[]
+  records: SurveyRecord[],
+  rushMultiplier: number = DEFAULT_RUSH_MULTIPLIER
 ): SchedulePickupInfo {
-  // 수업 종료 시각이 속한 30분 슬롯 찾기
   const matchedSlot =
     TIME_SLOTS.find(
       (s) => schedule.endTime >= s.start && schedule.endTime < s.end
@@ -130,10 +126,10 @@ export function getSchedulePickupInfo(
   const congestion = calcCongestionScore(
     avgCount,
     schedule.areaId,
-    matchedSlot?.isRushHour ?? false
+    matchedSlot?.isRushHour ?? false,
+    rushMultiplier
   );
 
-  // 혼잡도에 따라 도착 권장 안내 문구 결정
   let suggestedArrivalText: string;
   if (avgCount === 0) {
     suggestedArrivalText = "조사 데이터가 없어 예측이 어렵습니다";

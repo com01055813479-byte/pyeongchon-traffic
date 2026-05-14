@@ -1,16 +1,110 @@
 @import "tailwindcss";
 
+/* ─── Tailwind v4: 다크모드 토글을 위한 커스텀 variant ────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── 디자인 토큰 (Light/Dark 모두 정의) ───────────────────────────────────── */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* 배경 그라데이션 (라이트) */
+  --bg-from: #eef2ff;   /* indigo-50 */
+  --bg-via:  #faf5ff;   /* purple-50 */
+  --bg-to:   #fef2f2;   /* rose-50 */
+
+  /* 글래스 카드 */
+  --glass-bg:     rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+  /* 텍스트 */
+  --text-strong: #0f172a;
+  --text-base:   #334155;
+  --text-muted:  #64748b;
+}
+
+.dark {
+  /* 배경 그라데이션 (다크) */
+  --bg-from: #020617;   /* slate-950 */
+  --bg-via:  #1e1b4b;   /* indigo-950 */
+  --bg-to:   #3b0764;   /* purple-950 */
+
+  /* 글래스 카드 */
+  --glass-bg:     rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
+  /* 텍스트 */
+  --text-strong: #f1f5f9;
+  --text-base:   #cbd5e1;
+  --text-muted:  #94a3b8;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-via) 50%, var(--bg-to) 100%);
+  background-attachment: fixed;
+  color: var(--text-base);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", sans-serif;
+  min-height: 100vh;
+}
+
+/* 데코레이션 — 좌상/우하에 흐릿한 컬러 블롭 */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+body::before {
+  top: -200px;
+  left: -200px;
+  background: #60a5fa; /* blue-400 */
+}
+body::after {
+  bottom: -200px;
+  right: -200px;
+  background: #c084fc; /* purple-400 */
+}
+.dark body::before {
+  background: #1d4ed8; /* blue-700 */
+  opacity: 0.4;
+}
+.dark body::after {
+  background: #7c3aed; /* violet-600 */
+  opacity: 0.4;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* ─── 글래스 카드 공통 클래스 ─────────────────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.glass-strong {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+}
+
+/* Leaflet 컨트롤 다크모드 보정 */
+.dark .leaflet-control-attribution,
+.dark .leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #e2e8f0 !important;
+}
+.dark .leaflet-control-zoom a {
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }

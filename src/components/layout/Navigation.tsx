@@ -1,4 +1,4 @@
-import { LayoutDashboard, ClipboardList, BarChart3, MapPin, CalendarDays } from "lucide-react";
+import { LayoutDashboard, ClipboardList, BarChart3, Settings, CalendarDays } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
@@ -13,13 +13,13 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/",
     label: "홈",
     icon: LayoutDashboard,
-    description: "현재 혼잡도 및 픽업 추천 요약",
+    description: "지도, 위치 확인, 오늘의 픽업 일정",
   },
   {
     href: "/schedule",
     label: "시간표",
     icon: CalendarDays,
-    description: "학원 수업 시간표 관리 및 오늘의 픽업 안내",
+    description: "학원 수업 시간표 관리",
   },
   {
     href: "/data-input",
@@ -34,9 +34,9 @@ export const NAV_ITEMS: NavItem[] = [
     description: "시간대별 혼잡도 차트 분석",
   },
   {
-    href: "/dashboard",
-    label: "대시보드",
-    icon: MapPin,
-    description: "최적 픽업 시간대 추천 대시보드",
+    href: "/settings",
+    label: "설정",
+    icon: Settings,
+    description: "테마, 데이터 관리, 알고리즘 가중치",
   },
 ];

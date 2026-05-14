@@ -12,6 +12,12 @@ interface Props {
   onAdd: (schedule: Omit<AcademySchedule, "id">) => void;
 }
 
+const inputCls =
+  "glass rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500";
+
+const labelCls = "text-sm font-medium text-slate-700 dark:text-slate-200";
+const helpCls  = "text-xs text-slate-400 dark:text-slate-500";
+
 export function ScheduleForm({ onAdd }: Props) {
   const [academyName, setAcademyName] = useState("");
   const [days, setDays] = useState<DayOfWeek[]>([]);
@@ -32,7 +38,6 @@ export function ScheduleForm({ onAdd }: Props) {
 
     onAdd({ academyName: academyName.trim(), days, endTime, areaId, note: note.trim() || undefined });
 
-    // 폼 초기화
     setAcademyName("");
     setDays([]);
     setEndTime("19:00");
@@ -43,26 +48,20 @@ export function ScheduleForm({ onAdd }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      {/* 학원 이름 */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-gray-700">
-          학원 이름 <span className="text-red-400">*</span>
-        </label>
+        <label className={labelCls}>학원 이름 <span className="text-rose-400">*</span></label>
         <input
           type="text"
           value={academyName}
           onChange={(e) => setAcademyName(e.target.value)}
           placeholder="예: 수학 학원, 영어 학원"
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
           required
         />
       </div>
 
-      {/* 수업 요일 */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">
-          수업 요일 <span className="text-red-400">*</span>
-        </label>
+        <label className={labelCls}>수업 요일 <span className="text-rose-400">*</span></label>
         <div className="flex gap-2 flex-wrap">
           {ALL_DAYS.map((day) => {
             const active = days.includes(day);
@@ -72,12 +71,10 @@ export function ScheduleForm({ onAdd }: Props) {
                 key={day}
                 type="button"
                 onClick={() => toggleDay(day)}
-                className={`w-10 h-10 rounded-xl text-sm font-semibold border transition-colors ${
+                className={`w-10 h-10 rounded-xl text-sm font-semibold transition-all ${
                   active
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : isWeekend
-                    ? "bg-white text-red-400 border-gray-200 hover:bg-red-50"
-                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/30"
+                    : `glass ${isWeekend ? "text-rose-500 dark:text-rose-300" : "text-slate-600 dark:text-slate-300"}`
                 }`}
               >
                 {day}
@@ -85,56 +82,47 @@ export function ScheduleForm({ onAdd }: Props) {
             );
           })}
         </div>
-        {days.length === 0 && (
-          <p className="text-xs text-gray-400">요일을 1개 이상 선택해 주세요</p>
-        )}
+        {days.length === 0 && <p className={helpCls}>요일을 1개 이상 선택해 주세요</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* 수업 종료 시간 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">
-            수업 종료 시간 <span className="text-red-400">*</span>
-          </label>
+          <label className={labelCls}>수업 종료 시간 <span className="text-rose-400">*</span></label>
           <input
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputCls}
             required
           />
-          <p className="text-xs text-gray-400">학원 수업이 끝나는 시간</p>
+          <p className={helpCls}>학원 수업이 끝나는 시간</p>
         </div>
 
-        {/* 픽업 구역 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">
-            픽업 구역 <span className="text-red-400">*</span>
-          </label>
+          <label className={labelCls}>픽업 구역 <span className="text-rose-400">*</span></label>
           <select
             value={areaId}
             onChange={(e) => setAreaId(e.target.value)}
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputCls}
           >
             {AREAS.map((a) => (
-              <option key={a.id} value={a.id}>
+              <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">
                 {a.name}
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-400">학원이 위치한 구역</p>
+          <p className={helpCls}>학원이 위치한 구역</p>
         </div>
       </div>
 
-      {/* 메모 */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-gray-700">픽업 메모 (선택)</label>
+        <label className={labelCls}>픽업 메모 (선택)</label>
         <input
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="예: 3층 출구 앞, 정문에서 대기"
-          className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
         />
       </div>
 

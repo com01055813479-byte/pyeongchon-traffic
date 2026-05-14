@@ -8,6 +8,7 @@ import { TodayScheduleCard } from "@/components/features/schedule/TodayScheduleC
 import { useLocalStorage } from "@/lib/hooks/useLocalStorage";
 import { getSchedulePickupInfo } from "@/lib/algorithms/congestionScore";
 import { SAMPLE_RECORDS, SAMPLE_SCHEDULES } from "@/data/sampleData";
+import { useSettings } from "@/lib/context/SettingsContext";
 import type { AcademySchedule, DayOfWeek } from "@/lib/types";
 
 const KO_DAYS: DayOfWeek[] = ["일", "월", "화", "수", "목", "금", "토"];
@@ -21,16 +22,14 @@ export default function SchedulePage() {
     "academy-schedules",
     SAMPLE_SCHEDULES
   );
+  const { settings } = useSettings();
 
   const todayDay = getTodayDay();
-
-  // 오늘 요일에 해당하는 학원만 필터
   const todaySchedules = schedules.filter((s) => s.days.includes(todayDay));
 
-  // 오늘 학원별 픽업 추천 정보 계산
   const todayInfos = todaySchedules
     .sort((a, b) => a.endTime.localeCompare(b.endTime))
-    .map((s) => getSchedulePickupInfo(s, SAMPLE_RECORDS));
+    .map((s) => getSchedulePickupInfo(s, SAMPLE_RECORDS, settings.rushHourMultiplier));
 
   function handleAdd(data: Omit<AcademySchedule, "id">) {
     setSchedules((prev) => [
@@ -47,12 +46,12 @@ export default function SchedulePage() {
     <div className="flex flex-col gap-6">
       {/* 페이지 헤더 */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
-          <CalendarDays size={20} className="text-indigo-500" />
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <CalendarDays size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-gray-900">학원 시간표</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">학원 시간표</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             학원 수업 종료 시간을 등록하면 픽업 혼잡도를 자동으로 안내합니다
           </p>
         </div>
@@ -67,10 +66,10 @@ export default function SchedulePage() {
         </CardHeader>
         <CardContent>
           {!hydrated ? (
-            <p className="text-sm text-gray-400 py-4 text-center">불러오는 중...</p>
+            <p className="text-sm text-slate-400 dark:text-slate-500 py-4 text-center">불러오는 중...</p>
           ) : todayInfos.length === 0 ? (
-            <div className="text-center py-8 text-gray-400 text-sm">
-              <Star size={28} className="mx-auto mb-2 opacity-30" />
+            <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">
+              <Star size={28} className="mx-auto mb-2 opacity-40" />
               <p>오늘({todayDay}) 등록된 학원 일정이 없습니다.</p>
             </div>
           ) : (
@@ -100,7 +99,7 @@ export default function SchedulePage() {
         </CardHeader>
         <CardContent>
           {!hydrated ? (
-            <p className="text-sm text-gray-400 py-4 text-center">불러오는 중...</p>
+            <p className="text-sm text-slate-400 dark:text-slate-500 py-4 text-center">불러오는 중...</p>
           ) : (
             <ScheduleList
               schedules={schedules}

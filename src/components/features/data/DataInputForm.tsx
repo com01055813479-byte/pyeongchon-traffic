@@ -14,6 +14,10 @@ interface Props {
 
 const WEATHER_OPTIONS: WeatherCondition[] = ["맑음", "흐림", "비", "눈"];
 
+const inputCls =
+  "glass rounded-xl px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500";
+const labelCls = "text-sm font-medium text-slate-700 dark:text-slate-200";
+
 export function DataInputForm({ onAdd }: Props) {
   const [date, setDate] = useState(todayStr());
   const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[0].start);
@@ -38,53 +42,33 @@ export function DataInputForm({ onAdd }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* 날짜 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">조사 날짜</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+          <label className={labelCls}>조사 날짜</label>
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} required />
         </div>
 
-        {/* 시간대 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">시간대</label>
-          <select
-            value={timeSlot}
-            onChange={(e) => setTimeSlot(e.target.value)}
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <label className={labelCls}>시간대</label>
+          <select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)} className={inputCls}>
             {TIME_SLOTS.map((s) => (
-              <option key={s.id} value={s.start}>
+              <option key={s.id} value={s.start} className="bg-white dark:bg-slate-800">
                 {s.label} ({s.start})
               </option>
             ))}
           </select>
         </div>
 
-        {/* 구역 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">조사 구역</label>
-          <select
-            value={areaId}
-            onChange={(e) => setAreaId(e.target.value)}
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <label className={labelCls}>조사 구역</label>
+          <select value={areaId} onChange={(e) => setAreaId(e.target.value)} className={inputCls}>
             {AREAS.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
+              <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">{a.name}</option>
             ))}
           </select>
         </div>
 
-        {/* 차량 수 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">관측 차량 수</label>
+          <label className={labelCls}>관측 차량 수</label>
           <input
             type="number"
             min={0}
@@ -92,24 +76,23 @@ export function DataInputForm({ onAdd }: Props) {
             value={carCount}
             onChange={(e) => setCarCount(e.target.value)}
             placeholder="예: 42"
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputCls}
             required
           />
         </div>
 
-        {/* 날씨 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">날씨</label>
+          <label className={labelCls}>날씨</label>
           <div className="flex gap-2 flex-wrap">
             {WEATHER_OPTIONS.map((w) => (
               <button
                 key={w}
                 type="button"
                 onClick={() => setWeather(w)}
-                className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
                   weather === w
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md shadow-blue-500/20"
+                    : "glass text-slate-600 dark:text-slate-300"
                 }`}
               >
                 {w}
@@ -118,15 +101,14 @@ export function DataInputForm({ onAdd }: Props) {
           </div>
         </div>
 
-        {/* 메모 */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">메모 (선택)</label>
+          <label className={labelCls}>메모 (선택)</label>
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="특이사항을 입력하세요"
-            className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputCls}
           />
         </div>
       </div>
