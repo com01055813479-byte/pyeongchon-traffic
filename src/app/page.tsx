@@ -149,7 +149,7 @@ export default function HomePage() {
       >
         <AlertCircle size={16} className="mt-0.5 shrink-0 text-[var(--accent)]" />
         <p>
-          아직 현장 조사 안해서 <strong>가짜 데이터</strong> 넣어논거임. — 조은규가
+          아직 현장 조사 안해서 <strong>가짜 데이터</strong> 넣어논거임. — 조은규가 <span className="text-[var(--text-muted)]">(미완성임)</span>
         </p>
       </div>
 

@@ -312,7 +312,7 @@ export default function SettingsPage() {
               >
                 <Info size={16} />
               </button>
-              앱 정보
+              웹 정보
               {showCredit && (
                 <span className="ml-auto text-[11px] font-medium text-[var(--text-muted)]">
                   개발: @eungyiu
