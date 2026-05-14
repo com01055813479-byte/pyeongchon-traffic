@@ -26,7 +26,7 @@ export function DashboardSummary({ stats }: Props) {
       <StatCard
         icon={<TrendingDown size={18} />}
         iconBg="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-        label="최적 픽업"
+        label="가장 쾌적"
         value={stats.bestPickupSlot?.start ?? "—"}
         unit={stats.bestPickupSlot ? "" : ""}
       />
