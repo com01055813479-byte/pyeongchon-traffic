@@ -17,13 +17,12 @@ interface Game {
 }
 
 const GAMES: Game[] = [
-  // 예시 — 실제 게임 만들 때 이 형식으로 추가:
-  // {
-  //   title: "스네이크 게임",
-  //   description: "방향키로 뱀 조작",
-  //   href: "/games/snake",
-  //   emoji: "🐍",
-  // },
+  {
+    title: "파쿠르 타워",
+    description: "1인칭 점프맵 — 10 스테이지",
+    href: "/games/parkour",
+    emoji: "🏗️",
+  },
 ];
 
 export default function GamesPage() {

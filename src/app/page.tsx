@@ -16,6 +16,7 @@ import { DashboardSummary } from "@/components/features/recommendation/Dashboard
 import { TodayScheduleCard } from "@/components/features/schedule/TodayScheduleCard";
 import { LocationTracker } from "@/components/features/gps/LocationTracker";
 import { TravelTimeEstimate } from "@/components/features/gps/TravelTimeEstimate";
+import { WeatherCard } from "@/components/features/weather/WeatherCard";
 import { useLocalStorage } from "@/lib/hooks/useLocalStorage";
 import { SAMPLE_RECORDS, SAMPLE_SCHEDULES } from "@/data/sampleData";
 import { buildPickupRecommendations, getSchedulePickupInfo } from "@/lib/algorithms/congestionScore";
@@ -67,14 +68,17 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* ─── 인사말 (히어로 대체) ─────────────────────────────────────────── */}
-      <section className="pt-2 pb-1">
-        <p className="text-sm text-[var(--text-muted)] mb-1">오늘 {todayDay}요일</p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-strong)] leading-tight">
-          평촌학원가
-          <br />
-          <span className="text-[var(--accent)]">픽업 안내</span>
-        </h1>
+      {/* ─── 인사말 + 날씨 카드 ─────────────────────────────────────────── */}
+      <section className="pt-2 pb-1 flex items-end justify-between gap-3 flex-wrap">
+        <div>
+          <p className="text-sm text-[var(--text-muted)] mb-1">오늘 {todayDay}요일</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-strong)] leading-tight">
+            평촌학원가
+            <br />
+            <span className="text-[var(--accent)]">픽업 안내</span>
+          </h1>
+        </div>
+        <WeatherCard />
       </section>
 
       {/* ─── 지도 + 위치 — 메인 컨텐츠 ──────────────────────────────────── */}
